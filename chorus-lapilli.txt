@@ -1,0 +1,886 @@
+Samuel Perrott
+CS 35L Assignment 3
+
+First, ssh into the seasnet server.
+
+    ssh perrott@lnxsrv15.seas.ucla.edu
+
+Then, create the app.
+
+    npx create-react-app chorus-lapilli
+
+Now, enter the directory
+
+    cd chorus-lapilli
+
+To make chorus-lapilli, we are going to build off of the React tutorial on creating a tictactoe game.
+
+https://react.dev/learn/tutorial-tic-tac-toe
+
+In case you were unfamiliar, chorus lapilli is just like tic tac toe except that after a player has placed three X's or O's on the board, their subsequent moves must move one of their own pieces around to an adjacent empty spot rather than placing new X's or O's down. Adjacent means up, down, right, left, or diagonal. Also, if a player has their piece occupying the center at the start of their round then they must either play a winning move or move their piece out of the center.
+
+In more formal terms:
+
+"Chorus lapilli is like tic-tac-toe in that players take turn placing pieces on a 3 by 3 board and the goal is to get three pieces in a row. However, it differs from tic-tac-toe in two ways:
+
+1. After your first three moves, instead of adding further pieces you must instead move one of your existing pieces to an adjacent empty square. Therefore, after your third move you always occupy three squares. The move can be up, down, left, right, or diagonal.
+
+2. If it is your turn to move and you have three pieces on the board and one of your pieces is in the center square, your move must either win or vacate the center square"
+
+-- according to Professor Eggert.
+
+
+So, anyhow, we're in the chorus-lapilli directory. You see there's already default files written. Let's open App.js.
+
+Change your App.js to the following. (This is copied from the React tutorial part right before they begin implementing History. We also kept import React from 'react' from the biolerplate stuff because it is needed to run on seasnet servers.) I've surrounded the copy/paste with a convenient ---------------- so that you know where it starts/ends. DON'T PASTE THAT PART.
+
+-----------------
+
+import React from 'react';
+import { useState } from 'react';
+
+function Square({value, onSquareClick}) {
+  return (
+    <button className="square" onClick={onSquareClick}>
+      {value}
+    </button>
+  );
+}
+
+export default function Board() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [squares, setSquares] = useState(Array(9).fill(null));
+
+  function handleClick(i) {
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    const nextSquares = squares.slice();
+    if (xIsNext) {
+      nextSquares[i] = 'X';
+    } else {
+      nextSquares[i] = 'O';
+    }
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext);
+  }
+
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = 'Winner: ' + winner;
+  } else {
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+  }
+
+  return (
+    <>
+      <div className="status">{status}</div>
+      <div className="board-row">
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+      </div>
+    </>
+  );
+}
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+---------------------------
+
+Now, also rename the index.css file to styles.css and copy and paste the following (also from the React tutorial, the beginning where you can just go to CodeSandbox and grab it).
+
+----------------------
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  padding: 0;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+h4 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+h5 {
+  margin-top: 0;
+  font-size: 14px;
+}
+
+h6 {
+  margin-top: 0;
+  font-size: 12px;
+}
+
+code {
+  font-size: 1.2em;
+}
+
+ul {
+  padding-inline-start: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  padding: 0;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.board-row:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+
+----------------
+
+We'll go ahead and delete the .game and .game-info elements though since we didn't implement a Game function.
+
+Yay. Make sure to also modify your index.js to now say
+
+    import './styles.css/';
+
+instead of what it said before for the css import.
+
+Great. Let's go back to App.js
+
+So first and foremost, let's think. In chorus-lapilli, our handleClick function is going to have to be a bit more sophisticated, since it will act differently than tictactoe if and when players have all three pieces on the board.
+
+Okay. How can we keep track of that? Well, notice that the special chorus-lapilli rules don't kick in until starting on the 7th move (if we count from 1) since before that each player puts down 3 of their pieces just like tic tac toe.
+
+Okay, so let's add a new state called currentMove to count how many moves we've done so far, then we can derive whether we need to go into a more complex handleClick implementation based on whether currentMove >= 6 (since we'll set currentMove to 0 to begin with kind of like how they do in the React tutorial, but you could start with 1 and then have the condition be currentMove >= 7).
+
+Okay, so add this:
+
+  const [currentMove, setCurrentMove] = useState(0);
+
+Under the other states in your Board() function.
+
+Okay.
+
+But we also need to figure out a way to keep track of which piece the player wants to move once we hit these chorus-lapilli rules. How are we going to do that? Since it's more or less arbitrary and up to the player, we can't derive it from the other states we hvae currently (xIsNext, squares, currentMove), so let's add another state, selectedSquare.
+
+  const [selectedSquare, setSelectedSquare] = useState(null);
+
+We'll go ahead and put this under the currentMove line above.
+
+Cool. We set it to null at first since nothing will be selected until later.
+
+Okay.
+
+Now, if you didn't do the React tutorial, you might be like: "Wait, can you explain how the React code works again?"
+
+Okay, let me give you a run down.
+
+So basically, the export default function is Board() which means it is the main function that get's called.
+
+What does it do? It returns 9 "Square" elements as you can see. If you opened it in a browser you would see our familiar tic tac toe grid composed of these squares. Look at the Square function. What does it return? A button. Button's have a property called onClick that allows you to do stuff when someone clicks them. We passed () => handleClick(i) to ith Square so that when it is clicked handeClick will basically put an X or an O onto squares[i]. Well, kind of. It has some if conditions that say that if somebody wins or the square you clicked is occupied we're not going to do anything. And that's just the tictactoe rules. Notice that we also have a status div in our Board's return. The status is calculated in the Board function above. Basically it says who the next player is. We keep track of who the next player is using xIsNext.
+
+OH WAIT!
+
+Let's change xIsNext to a regular const since it can be derived from currentMove.
+
+So delete the line that makes xIsNext a state and instead put
+
+  const xIsNext = currentMove % 2 === 0;
+
+Below our selectedSquare state declaration.
+
+Cool. Now you should go ahead and delete all calls to setXisNext since xIsNext will automatically mirror the value of currentMove based on it's definition so you don't need to independently change it anymore. Yay.
+
+Okay, anyway, as I was saying:
+
+our Board keeps a state called squares which is an array of length 9 each element corresponds to a square on the tictactoe grid (soon to be chorus lapilli grid).
+
+Fine.
+
+We start out filling it with null because there's nothing on the board in the beginning. Later on, we can add stuff by first making a copy of squares via squares.slice(), modifying this copy, and then using setSquares(copyName) to update squares. (We have to go through these shenanigans since it is a const state.)
+
+Okay.
+
+Anywho... let's create a handleReset() function really quick since that's simple and easy.
+
+Basically:
+
+  function handleReset() {
+    setSquares(Array(9).fill(null));
+    setSelectedSquare(null);
+    setCurrentMove(0);
+  }
+
+Since everything depends on the state of our Board, right? So just set everything back to the default values. Simple.
+
+But how does the user reset the board? Let's give them a button to press since that seems pretty easy to do.
+
+Go back down to your return statement in the Board function. Add the following:
+
+      <button onClick={handleReset} className="reset">Reset</button>
+
+Boom. It's a button that says "Reset". When it is clicked, it will call handleReset. I gave it a className so that we can style it with CSS later since right now it has like no margins.
+
+Let's just do the CSS now actually:
+
+.reset {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+Yay. I just added some margins basically (also made the text center aligned but that doesn't really do much lol). This is just for my preferred aesthetic you can do whatever, even no CSS if you want.
+
+OKAY.
+
+NOW LET'S GET TO THE FUN AKA HARD PART.
+
+handleClick
+
+Well, currently, your handleClick looks like this:
+
+  function handleClick(i) {
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    const nextSquares = squares.slice();
+    if (xIsNext) {
+      nextSquares[i] = 'X';
+    } else {
+      nextSquares[i] = 'O';
+    }
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext);
+  }
+
+
+Pretty simple right? By the way, I forgot to mention that calculateWinner is a function we defined outside of Board that checks to see if any of the valid 3 in a row combinations are present in our squares array and returns the winning letter (X or O) if so, otherwise returns null:
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+You won't need to modify this one.
+
+Anywho
+
+Back to handleClick
+
+So currently we have this like escape condition in the begining that basically says EXIT if there's a winner or if the square you clicked is occupied already.
+
+Okay. We do want to exit if there is a winner. BUT, we may not actually want to exit if a square is occupied already since we will have to select squares after the first 6 rounds and that entails clicking an already occupied square.
+
+So let's just change the escape condition to:
+
+    if (calculateWinner(squares)) return;
+
+And yes, I removed the braces because I'm lazy, but you could keep them. It's a one-liner so potato potato, six of one, half a dozen of the other.
+
+OKAY
+
+So now... Let's think very carefully. First, our handleClick function should work like it did in tictactoe if and when currentMove < 6 (remember we started currentMove at 0 so that's why it's 6 not 7). Okay...
+
+WHAT IF CURRENTMOVE >= 6?
+
+Let's do that part.
+
+So if it is time for the chorus-lapilli rules to kick in. FIRST, the player needs to select one of their own pieces that is already on the board.
+
+So we need to check that i, which is the index of square the user clicked, has the correct piece.
+
+squares[i] === (xIsNext ? 'X' : 'O')
+
+Is a nice an compact way to write this using ternary operator.
+
+Cool. That's cool.
+
+But what do we do? We setSelectedSquare(i)!
+
+      if (currentMove >= 6)
+        if (squares[i] === (xIsNext ? 'X' : 'O')) setSelectedSquare(i);
+
+okay...
+
+So, this is all fine and dandy if the user hasn't selected a square yet:
+
+    if (selectedSquare === null) {
+      if (currentMove >= 6) {
+        if (squares[i] === (xIsNext ? 'X' : 'O')) setSelectedSquare(i);
+      } else {
+        if (squares[i]) return;
+        const nextSquares = squares.slice();
+        nextSquares[i] = (xIsNext ? 'X' : 'O');
+        setSquares(nextSquares);
+        setCurrentMove(currentMove + 1);
+      }
+    }
+
+You should see that I have the old tictactoe logic in the else part and then our new logic in the if part (second level) of this if statement.
+
+BUT WHAT IF I SELECTED MY X AND NOW I WANT TO MOVE IT TO ANOTHER SPOT?
+
+for example.
+
+In that case, selectedSquare is going to have a value.
+
+OKAY. Well, we can only move your X to an empty adjacent spot. So let's make an if condition that captures that sentiment.
+
+WAIT wait wait. How do we determine if two spots are adjacent? HMMM. Well, there are only 9 indices, so I could just do it by hand using like a switch statement or something. Turns out, that's what I did. (Because idk how to make this simpler and it works lol.)
+
+  function isAdjacent(i, j) {
+    switch (i) {
+      case 1:
+        return j === 2 || j === 4 || j === 5;
+      case 2:
+        return j === 1 || j === 3 || j === 4 || j === 5 || j === 6;
+      case 3:
+        return j === 2 || j === 5 || j === 6;
+      case 4:
+        return j === 1 || j === 2 || j === 5 || j === 7 || j === 8;
+      case 5:
+        return Boolean(j);
+      case 6:
+        return j === 2 || j === 3 || j === 5 || j === 8 || j === 9;
+      case 7:
+        return j === 4 || j === 5 || j === 8;
+      case 8:
+        return j === 4 || j === 5 || j === 6 || j === 7 || j === 9;
+      case 9:
+        return j === 5 || j === 6 || j === 8;
+      default:
+        return false;
+    }
+  }
+
+
+Boom. A nice auxiliary function we can put into our Board class (or outside if you want). Basically it just literally lists out all the possibilities for each case. You can manually check it. I accidentally forgot that our Board uses 0 indexing so I scribbled this all with the presumption of 1 indexing and that's why we have 1-9 instead of 0-8. The nice part though is that instead of writing out every number except 5 in 1-9 for case 5 (which is the middle square), I can just cast to a boolean since any positive integer is cast to true. Zero would be cast to false, which is annoying. So I guess there's that small advantage of me accidentally doing 1 indexing. Of course, we're going to have to now remember to pass our indices in a way that they are incremented whenever we call this function haha.
+
+Default case should never be reached by the way, but I just put it there as a good practice.
+
+anyway
+
+Yay, now we don't have to write this humongous if condition stuff into our handleClick function, instead we can just write:
+
+if (isAdjacent(i + 1, selectedSquare + 1)) {
+    // ... proceed to do the moving of your piece
+}
+
+Yay.
+
+Okay. So if I clicked on an adjacent square after having already selected my piece I want to move, what happens? Well, pretending I'm X, I'll just put X into the new spot and delete it from the old spot.
+
+      if (squares[i]) return;
+      const nextSquares = squares.slice();
+      nextSquares[i] = (xIsNext ? 'X' : 'O');
+      nextSquares[selectedSquare] = null;
+      if (squares[4] === (xIsNext ? 'X' : 'O') && nextSquares[4] === squares[4] && !calculateWinner(nextSquares)) return;
+
+      setSquares(nextSquares);
+      setCurrentMove(currentMove + 1);
+      setSelectedSquare(null);
+
+And we have the escape condition on the top so that you aren't overwriting other pieces.
+
+As I mentioned, we have to use slicing to modify squares. HOWEVER, notice the condition with the squares[4] stuff.
+
+OH YEAH. Chorus lapilli has that special rule that you MUST vacate the center unless you're playing a winning move. In other words, you can't move any of your pieces if this rule gets broken.
+
+      if (squares[4] === (xIsNext ? 'X' : 'O') && nextSquares[4] === squares[4] && !calculateWinner(nextSquares)) return;
+
+As you can see, we can check this by seeing if the center is occupied by YOUR piece at the beginning of the turn. And then, based on what you wanted to do, would it be occupied at the end of the turn? If both are yes, you better have won! Otherwise we're getting out of this function with a return statement.
+
+OKAY.
+
+The final part is above, we're just updating the states so that the user sees all of this stuff update. (In addition to changing the grid, we deselect the square and increment the currentMove of course.)
+
+Alrighty. Now, this might seem fine and dandy if you always selected a piece that could move. But what if, perchance, you had a piece occupying the center and you selected your corner piece and it simply cannot play a winning move? Your stuck in a rut at this point.
+
+Not for long! Let's allow the player to deselect and reselect pieces if they change their mind about which piece they want to select to move.
+
+    if (selectedSquare === i) {
+      setSelectedSquare(null);
+    } else if (selectedSquare !== null && squares[i] === squares[selectedSquare]) {
+      setSelectedSquare(i);
+    }
+
+
+Yay. The first if statement says deselect the piece if you click it twice consecutively. The second part says that if you select a different valid piece even after you already have one selected, we'll just change to that.
+
+Putting all of this together:
+
+  function handleClick(i) {
+    if (calculateWinner(squares)) return;
+
+    if (selectedSquare === i) {
+      setSelectedSquare(null);
+    } else if (selectedSquare !== null && squares[i] === squares[selectedSquare]) {
+      setSelectedSquare(i);
+    } else if (selectedSquare !== null && isAdjacent(i + 1, selectedSquare + 1)) {
+      if (squares[i]) return;
+      const nextSquares = squares.slice();
+      nextSquares[i] = (xIsNext ? 'X' : 'O');
+      nextSquares[selectedSquare] = null;
+      if (squares[4] === (xIsNext ? 'X' : 'O') && nextSquares[4] === squares[4] && !calculateWinner(nextSquares)) return;
+
+      setSquares(nextSquares);
+      setCurrentMove(currentMove + 1);
+      setSelectedSquare(null);
+    } else if (selectedSquare === null) {
+      if (currentMove >= 6) {
+        if (squares[i] === (xIsNext ? 'X' : 'O')) setSelectedSquare(i);
+      } else {
+        if (squares[i]) return;
+        const nextSquares = squares.slice();
+        nextSquares[i] = (xIsNext ? 'X' : 'O');
+        setSquares(nextSquares);
+        setCurrentMove(currentMove + 1);
+      }
+    }
+  }
+
+
+Your handleClick should look like the above.
+
+Yay. Now, suppose I didn't want to have to keep track of the selectedSquare using developerTools. How can we highlight which square I have selected so a player doesn't forget?
+
+How about this following:
+
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} selected={selectedSquare === 0} />
+        // ...
+
+We'll pass a boolean to our Square component based on whether it is selected. Update the Square function as follows:
+
+function Square({ value, onSquareClick, selected }) {
+  return (
+    <button className={"square " + (selected ? "selected" : "")} onClick={onSquareClick}>
+      {value}
+    </button>
+  );
+}
+
+If selected is true, we're going to add another class to our button called selected. (As encapuslated using JS's neat string concatenation and ternary operator.)
+
+Duplicate the .button element in the styles.css part, but change it's name to .selected and then change the background color to a nice color for highlighting the square, for instance:
+
+.selected {
+  background: #cbd50c;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+YAY. Now when I select a square it becomes highlighted so I can know I chose it without looking at developer tools!
+
+Coolio. Finally, let's just make our UI a little more understandable so people don't think this is tictactoe and get confused. Let's add a header that says this is Chorus Lapilli and let's also add in the rules since honestly I'm not sure most people know them off the top of their head.
+
+Your Board's return statement should now look something like:
+
+  return (
+    <>
+      <h1>Chorus Lapilli</h1>
+      <hr></hr>
+      <div className="status">{status}</div>
+      <div className="board-row">
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} selected={selectedSquare === 0} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} selected={selectedSquare === 1} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} selected={selectedSquare === 2} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} selected={selectedSquare === 3} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} selected={selectedSquare === 4} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} selected={selectedSquare === 5} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} selected={selectedSquare === 6} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} selected={selectedSquare === 7} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} selected={selectedSquare === 8} />
+      </div>
+      <button onClick={handleReset} className="reset">Reset</button>
+      <hr></hr>
+      <strong>Rules:</strong>
+      <ol>
+        <li>
+          Like tic-tac-toe, players take turn placing pieces on a 3 by 3 board and the goal is to get three pieces in a row. X goes first, then O.
+        </li>
+        <li>
+          After your first three moves, instead of adding further pieces you must instead move one of your existing pieces to an adjacent empty square. Therefore, after your third move you always occupy three squares. The move can be up, down, left, right, or diagonal
+        </li>
+        <li>
+          If it is your turn to move and you have three pieces on the board and one of your pieces is in the center square, your move must either win or vacate the center square.
+        </li>
+        <li>
+          To select a piece to move, click on it. Then click on the square you wish to move it to. It will be moved there if that is a valid move. To unselect a square, simply click on it again or click a different square to select.
+        </li>
+      </ol>
+    </>
+  );
+
+
+YAY. Now, if you wanted to make it ultra-fancy, you could change the title in the browser and add cool stuff like pictures and whatnot, but lowkey I need to work on my project and I have a midterm coming up so I'm not going to do that today. But you could if you wanted to.
+
+Cool! This is what your App.js should say at the very end:
+
+----------------
+import React from 'react';
+import { useState } from 'react';
+
+function Square({ value, onSquareClick, selected }) {
+  return (
+    <button className={"square " + (selected ? "selected" : "")} onClick={onSquareClick}>
+      {value}
+    </button>
+  );
+}
+
+export default function Board() {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [currentMove, setCurrentMove] = useState(0);
+  const [selectedSquare, setSelectedSquare] = useState(null);
+  const xIsNext = currentMove % 2 === 0;
+
+  function handleReset() {
+    setSquares(Array(9).fill(null));
+    setSelectedSquare(null);
+    setCurrentMove(0);
+  }
+
+  function isAdjacent(i, j) {
+    switch (i) {
+      case 1:
+        return j === 2 || j === 4 || j === 5;
+      case 2:
+        return j === 1 || j === 3 || j === 4 || j === 5 || j === 6;
+      case 3:
+        return j === 2 || j === 5 || j === 6;
+      case 4:
+        return j === 1 || j === 2 || j === 5 || j === 7 || j === 8;
+      case 5:
+        return Boolean(j);
+      case 6:
+        return j === 2 || j === 3 || j === 5 || j === 8 || j === 9;
+      case 7:
+        return j === 4 || j === 5 || j === 8;
+      case 8:
+        return j === 4 || j === 5 || j === 6 || j === 7 || j === 9;
+      case 9:
+        return j === 5 || j === 6 || j === 8;
+      default:
+        return false;
+    }
+  }
+
+  function handleClick(i) {
+    if (calculateWinner(squares)) return;
+
+    if (selectedSquare === i) {
+      setSelectedSquare(null);
+    } else if (selectedSquare !== null && squares[i] === squares[selectedSquare]) {
+      setSelectedSquare(i);
+    } else if (selectedSquare !== null && isAdjacent(i + 1, selectedSquare + 1)) {
+      if (squares[i]) return;
+      const nextSquares = squares.slice();
+      nextSquares[i] = (xIsNext ? 'X' : 'O');
+      nextSquares[selectedSquare] = null;
+      if (squares[4] === (xIsNext ? 'X' : 'O') && nextSquares[4] === squares[4] && !calculateWinner(nextSquares)) return;
+
+      setSquares(nextSquares);
+      setCurrentMove(currentMove + 1);
+      setSelectedSquare(null);
+    } else if (selectedSquare === null) {
+      if (currentMove >= 6) {
+        if (squares[i] === (xIsNext ? 'X' : 'O')) setSelectedSquare(i);
+      } else {
+        if (squares[i]) return;
+        const nextSquares = squares.slice();
+        nextSquares[i] = (xIsNext ? 'X' : 'O');
+        setSquares(nextSquares);
+        setCurrentMove(currentMove + 1);
+      }
+    }
+  }
+
+
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = 'Winner: ' + winner;
+  } else {
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+  }
+
+  return (
+    <>
+      <h1>Chorus Lapilli</h1>
+      <hr></hr>
+      <div className="status">{status}</div>
+      <div className="board-row">
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} selected={selectedSquare === 0} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} selected={selectedSquare === 1} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} selected={selectedSquare === 2} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} selected={selectedSquare === 3} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} selected={selectedSquare === 4} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} selected={selectedSquare === 5} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} selected={selectedSquare === 6} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} selected={selectedSquare === 7} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} selected={selectedSquare === 8} />
+      </div>
+      <button onClick={handleReset} className="reset">Reset</button>
+      <hr></hr>
+      <strong>Rules:</strong>
+      <ol>
+        <li>
+          Like tic-tac-toe, players take turn placing pieces on a 3 by 3 board and the goal is to get three pieces in a row. X goes first, then O.
+        </li>
+        <li>
+          After your first three moves, instead of adding further pieces you must instead move one of your existing pieces to an adjacent empty square. Therefore, after your third move you always occupy three squares. The move can be up, down, left, right, or diagonal
+        </li>
+        <li>
+          If it is your turn to move and you have three pieces on the board and one of your pieces is in the center square, your move must either win or vacate the center square.
+        </li>
+        <li>
+          To select a piece to move, click on it. Then click on the square you wish to move it to. It will be moved there if that is a valid move. To unselect a square, simply click on it again or click a different square to select.
+        </li>
+      </ol>
+    </>
+  );
+}
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+-------------------
+
+Your styles.css should say:
+
+
+-----------------
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  padding: 0;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+h4 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+h5 {
+  margin-top: 0;
+  font-size: 14px;
+}
+
+h6 {
+  margin-top: 0;
+  font-size: 12px;
+}
+
+code {
+  font-size: 1.2em;
+}
+
+ul {
+  padding-inline-start: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  padding: 0;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.board-row:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.selected {
+  background: #cbd50c;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.reset {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+---------------------------
+
+And that is literally how I built this chorus-lapilli game. Fun, isn't it?
