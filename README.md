@@ -1,70 +1,42 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was adapted off of code from the React tic tac toe tutorial: https://react.dev/learn/tutorial-tic-tac-toe
 
-## Available Scripts
+## Rules
 
-In the project directory, you can run:
+"Chorus lapilli is like tic-tac-toe in that players take turn placing pieces on a 3 by 3 board and the goal is to get three pieces in a row. However, it differs from tic-tac-toe in two ways:
 
-### `npm start`
+After your first three moves, instead of adding further pieces you must instead move one of your existing pieces to an adjacent empty square. Therefore, after your third move you always occupy three squares. The move can be up, down, left, right, or diagonal.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+If it is your turn to move and you have three pieces on the board and one of your pieces is in the center square, your move must either win or vacate the center square."
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+-- Professor Eggert
 
-### `npm test`
+## How to Run
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Open these files locally and run
 
-### `npm run build`
+`npm install
+npm start`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You may have to first put
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+App.css			index.js		setupTests.js
+App.js			logo.svg		styles.css
+App.test.js		reportWebVitals.js
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+into a folder named "src"
 
-### `npm run eject`
+and then put
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+favicon.ico	logo192.png	manifest.json
+index.html	logo512.png	robots.txt
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+into a folder named "public"
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+So that you have the following in your current directory
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+README.md		package.json		src
+chorus-lapilli.txt	public			tic-tac-toe.txt
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Note: the txt files are just a documentation of how I built this (and how I first built tic-tac-toe before this, which isn't included here but you can follow the steps on the tutorial).
