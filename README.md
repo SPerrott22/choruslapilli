@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# _Chorus Lapilli_ aka "Dancing Grains"
 
 This project was adapted off of code from the React tic tac toe tutorial: https://react.dev/learn/tutorial-tic-tac-toe
 
