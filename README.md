@@ -16,8 +16,8 @@ If it is your turn to move and you have three pieces on the board and one of you
 
 Open these files locally and run
 
-`npm install
-npm start`
+`npm install`
+`npm start`
 
 You may have to first put
 
